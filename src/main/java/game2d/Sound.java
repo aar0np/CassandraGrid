@@ -34,6 +34,7 @@ public class Sound {
 			soundURL[15] = getClass().getResource("/sounds/cursor.wav");
 			soundURL[16] = getClass().getResource("/sounds/burning.wav");
 			soundURL[17] = getClass().getResource("/sounds/8-bit-blast-63035.wav");
+			soundURL[18] = getClass().getResource("/sounds/videogame-death-sound-43894.wav");
 		}
 	}
 	

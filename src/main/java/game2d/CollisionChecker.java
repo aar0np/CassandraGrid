@@ -28,12 +28,12 @@ public class CollisionChecker {
 		
 		int tileNum1, tileNum2;
 		
-		// check separately, so that we can detect collisions at angle movements		
+		// check separately, so that we can detect collisions at angle movements	
 		switch (entity.getDirection()) {
 			case "up":
 				entityTopRow = (entityTopWorldY - entity.getSpeed()) / tileSize;
-				tileNum1 = gp.getTileManager().getMapTileCodes()[entityLeftCol][entityTopRow];
-				tileNum2 = gp.getTileManager().getMapTileCodes()[entityRightCol][entityTopRow];
+				tileNum1 = getTileNumber(entityLeftCol,entityTopRow);
+				tileNum2 = getTileNumber(entityRightCol,entityTopRow);
 				
 				if (gp.getTileManager().getTiles()[tileNum1].isCollision() ||
 					gp.getTileManager().getTiles()[tileNum2].isCollision()) {
@@ -42,8 +42,8 @@ public class CollisionChecker {
 				break;
 			case "down":
 				entityBottomRow = (entityBottomWorldY + entity.getSpeed()) / tileSize;
-				tileNum1 = gp.getTileManager().getMapTileCodes()[entityLeftCol][entityBottomRow];
-				tileNum2 = gp.getTileManager().getMapTileCodes()[entityRightCol][entityBottomRow];
+				tileNum1 = getTileNumber(entityLeftCol,entityBottomRow);
+				tileNum2 = getTileNumber(entityRightCol,entityBottomRow);
 				
 				if (gp.getTileManager().getTiles()[tileNum1].isCollision() ||
 					gp.getTileManager().getTiles()[tileNum2].isCollision()) {
@@ -55,8 +55,8 @@ public class CollisionChecker {
 		switch (entity.getDirection()) {
 			case "left":
 				entityLeftCol = (entityLeftWorldX - entity.getSpeed()) / tileSize;
-				tileNum1 = gp.getTileManager().getMapTileCodes()[entityLeftCol][entityTopRow];
-				tileNum2 = gp.getTileManager().getMapTileCodes()[entityLeftCol][entityBottomRow];
+				tileNum1 = getTileNumber(entityLeftCol,entityTopRow);
+				tileNum2 = getTileNumber(entityLeftCol,entityBottomRow);
 				
 				if (gp.getTileManager().getTiles()[tileNum1].isCollision() ||
 					gp.getTileManager().getTiles()[tileNum2].isCollision()) {
@@ -65,8 +65,8 @@ public class CollisionChecker {
 				break;
 			case "right":
 				entityRightCol = (entityRightWorldX + entity.getSpeed()) / tileSize;
-				tileNum1 = gp.getTileManager().getMapTileCodes()[entityRightCol][entityTopRow];
-				tileNum2 = gp.getTileManager().getMapTileCodes()[entityRightCol][entityBottomRow];
+				tileNum1 = getTileNumber(entityRightCol,entityTopRow);
+				tileNum2 = getTileNumber(entityRightCol,entityBottomRow);
 				
 				if (gp.getTileManager().getTiles()[tileNum1].isCollision() ||
 					gp.getTileManager().getTiles()[tileNum2].isCollision()) {
@@ -237,5 +237,22 @@ public class CollisionChecker {
 		gp.getPlayer().getSolidArea().y = gp.getPlayer().getSolidAreaDefaultY();
 		
 		return contactPlayer;
+	}
+	
+	private int getTileNumber(int tileRow, int tileCol) {
+		
+		if (tileRow >= 50) {
+			tileRow = 49;
+		} else if (tileRow < 0) {
+			tileRow = 0;
+		}
+
+		if (tileCol >= 50) {
+			tileCol = 49;
+		} else if (tileCol < 0) {
+			tileCol = 0;
+		}
+
+		return gp.getTileManager().getMapTileCodes()[tileRow][tileCol];
 	}
 }

@@ -28,6 +28,11 @@ public class Player extends Entity {
 
 	final int screenX;
 	final int screenY;
+	private BufferedImage upAttack1, upAttack2, upAttack3,
+		downAttack1, downAttack2, downAttack3,
+		leftAttack1, leftAttack2, leftAttack3,
+		rightAttack1, rightAttack2, rightAttack3;
+	private int attackSpriteNum;
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		super(gp);
@@ -109,12 +114,16 @@ public class Player extends Entity {
 		if (currentWeapon.type == SWORD) {
 			upAttack1 = setupEntityImage("/player/stax_attack_up_1.png", tileSize, tileSize * 2);
 			upAttack2 = setupEntityImage("/player/stax_attack_up_2.png", tileSize, tileSize * 2);
+			upAttack3 = setupEntityImage("/player/stax_attack_up_3.png", tileSize, tileSize * 2);
 			downAttack1 = setupEntityImage("/player/stax_attack_down_1.png", tileSize, tileSize * 2);
 			downAttack2 = setupEntityImage("/player/stax_attack_down_2.png", tileSize, tileSize * 2);
+			downAttack3 = setupEntityImage("/player/stax_attack_down_3.png", tileSize, tileSize * 2);
 			rightAttack1 = setupEntityImage("/player/stax_attack_right_1.png", tileSize * 2, tileSize);
 			rightAttack2 = setupEntityImage("/player/stax_attack_right_2.png", tileSize * 2, tileSize);
+			rightAttack3 = setupEntityImage("/player/stax_attack_right_3.png", tileSize * 2, tileSize);
 			leftAttack1 = setupEntityImage("/player/stax_attack_left_1.png", tileSize * 2, tileSize);
 			leftAttack2 = setupEntityImage("/player/stax_attack_left_2.png", tileSize * 2, tileSize);
+			leftAttack3 = setupEntityImage("/player/stax_attack_left_3.png", tileSize * 2, tileSize);
 		}
 	}
 	
@@ -318,7 +327,8 @@ public class Player extends Entity {
 				
 				if (gp.getMonsters()[index].getCurrentHealth() <= 0) {
 					// monster begins to die
-					gp.getMonsters()[index].setDying(true);
+					// play sound
+					gp.playSoundEffect(18);					gp.getMonsters()[index].setDying(true);
 					gp.getGameUI().addMessage(gp.getMonsters()[index].name + " killed!");
 					gp.getGameUI().addMessage("XP + " + gp.getMonsters()[index].getExperiencePoints());
 					incrementExperiencePoints(gp.getMonsters()[index].getExperiencePoints());
@@ -354,10 +364,13 @@ public class Player extends Entity {
 		spriteCounter++;
 		if (spriteCounter <= 5) {
 			// first 5 frames show attack1 image
-			spriteNum = 1;
-		} else if (spriteCounter > 5 && spriteCounter <= 25) {
-			// second 20 frames show attack2 image
-			spriteNum = 2;
+			attackSpriteNum = 1;
+		} else if (spriteCounter > 5 && spriteCounter <= 20) {
+			// second 15 frames show attack2 image
+			attackSpriteNum = 2;
+		} else if (spriteCounter > 20 && spriteCounter <= 35) {
+			// third 15 frames show attack 3 image
+			attackSpriteNum = 3;
 			
 			// check if attack hits
 			int currentWorldX = worldX;
@@ -392,10 +405,11 @@ public class Player extends Entity {
 			worldY = currentWorldY;
 			solidArea.width = solidAreaWidth;
 			solidArea.height = solidAreaHeight;
-			
+		} else if (spriteCounter > 35 && spriteCounter <= 50) {
+			attackSpriteNum = 2;
 		} else {
 			// show attack 1 image for remainder of frames
-			spriteNum = 1;
+			attackSpriteNum = 1;
 			spriteCounter = 0;
 			attacking = false;
 		}
@@ -467,10 +481,12 @@ public class Player extends Entity {
 					}
 				} else {
 					tempScreenY -= tileSize; 
-					if (spriteNum == 1) {
+					if (attackSpriteNum == 1) {
 						image = upAttack1;
-					} else {
+					} else if (attackSpriteNum == 2) {
 						image = upAttack2;
+					} else {
+						image = upAttack3;
 					}
 				}
 				break;
@@ -483,10 +499,12 @@ public class Player extends Entity {
 						image = down2;
 					}
 				} else {
-					if (spriteNum == 1) {
+					if (attackSpriteNum == 1) {
 						image = downAttack1;
-					} else {
+					} else if (attackSpriteNum == 2){
 						image = downAttack2;
+					} else {
+						image = downAttack3;
 					}
 				}
 				break;
@@ -500,11 +518,13 @@ public class Player extends Entity {
 					}
 				} else {
 					tempScreenX -= tileSize;
-					if (spriteNum == 1) {
+					if (attackSpriteNum == 1) {
 						image = leftAttack1;
-					} else {
+					} else if (attackSpriteNum == 2){
 						image = leftAttack2;
-					}					
+					} else {
+						image = leftAttack3;
+					}
 				}
 				break;
 				
@@ -516,10 +536,12 @@ public class Player extends Entity {
 						image = right2;
 					}
 				} else {
-					if (spriteNum == 1) {
+					if (attackSpriteNum == 1) {
 						image = rightAttack1;
-					} else {
+					} else if (attackSpriteNum == 2) {
 						image = rightAttack2;
+					} else {
+						image = rightAttack3;
 					}
 				}
 				break;
